@@ -7,27 +7,29 @@ export default function App() {
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
-export default function Home() {
+export default function ISSTracker() {
   const { data, error, isLoading } = useSWR("/api/iss-data", fetcher);
 
-  return(
-<div>
-      <h1>ISS Tracker</h1>
-
-      {isLoading && <div>Loading...</div>}
-
-  
-      {error && <div>oops.. error!</div>}
+ 
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
 
-      {data && (
-        <div>
-          <p>Longitude: {data.longitude}</p>
-          <p>Latitude: {data.latitude}</p>
-        </div>
-      )}
+  if (error) {
+    return <div>Opps...error!</div>;
+  }
 
-  
+ 
+  if (!data) {
+    return <div>no data</div>;
+  }
+
+
+  return (
+    <div>
+      <p>Longitude: {data.longitude}</p>
+      <p>Latitude: {data.latitude}</p>
     </div>
   );
 }
