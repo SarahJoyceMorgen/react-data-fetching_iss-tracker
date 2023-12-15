@@ -8,9 +8,12 @@ export default function App() {
 const fetcher = (...args) => fetch(...args).then((res) => res.json());
 
 export default function ISSTracker() {
-  const { data, error, isLoading } = useSWR("/api/iss-data", fetcher);
+  const { data, error, isLoading, mutate } = useSWR("/api/iss-data", {
+    fetcher,
+    refreshInterval: 5000
+  });
 
- 
+
   if (isLoading) {
     return <div>Loading...</div>;
   }
@@ -20,7 +23,7 @@ export default function ISSTracker() {
     return <div>Opps...error!</div>;
   }
 
- 
+
   if (!data) {
     return <div>no data</div>;
   }
@@ -30,6 +33,7 @@ export default function ISSTracker() {
     <div>
       <p>Longitude: {data.longitude}</p>
       <p>Latitude: {data.latitude}</p>
+      <button onClick={() => mutate()}>Refresh</button>
     </div>
   );
 }
